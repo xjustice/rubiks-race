@@ -3,7 +3,7 @@ const COLORS = [
     'bg-primary-container', // Cyan-like
     'bg-secondary',         // Magenta-like
     'bg-tertiary-container',// Lime-like
-    'bg-white',             // White
+    'bg-orange-500',        // Orange (was White)
     'bg-error',             // Red
     'bg-primary'            // Dark Cyan
 ];
