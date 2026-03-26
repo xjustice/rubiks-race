@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rubik's Race - Game Session</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;family=Manrope:wght@400;500;700&amp;family=Space_Grotesk:wght@300;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#ffd7f5",
+              "surface-container-low": "#ecf4ff",
+              "tertiary-fixed": "#bef500",
+              "on-tertiary-fixed": "#151f00",
+              "background": "#f7f9ff",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#e0e9f5",
+              "surface": "#f7f9ff",
+              "tertiary-container": "#a2d100",
+              "error": "#ba1a1a",
+              "inverse-primary": "#47d6ff",
+              "surface-variant": "#dae3ef",
+              "on-secondary-fixed": "#380038",
+              "surface-container": "#e6effa",
+              "inverse-surface": "#29313a",
+              "outline": "#6c797f",
+              "surface-container-highest": "#dae3ef",
+              "primary-fixed": "#b6ebff",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#ffabf3",
+              "on-tertiary-container": "#415600",
+              "secondary": "#a900a9",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#d2dbe6",
+              "on-primary-fixed": "#001f28",
+              "on-secondary-fixed-variant": "#810081",
+              "on-background": "#141c25",
+              "tertiary-fixed-dim": "#a6d700",
+              "tertiary": "#4e6700",
+              "surface-bright": "#f7f9ff",
+              "primary-container": "#00d2ff",
+              "primary-fixed-dim": "#47d6ff",
+              "on-primary-fixed-variant": "#004e60",
+              "on-secondary-container": "#500050",
+              "primary": "#00677f",
+              "on-error": "#ffffff",
+              "outline-variant": "#bbc9cf",
+              "on-tertiary-fixed-variant": "#3a4d00",
+              "surface-tint": "#00677f",
+              "secondary-container": "#fe00fe",
+              "on-surface": "#141c25",
+              "on-primary-container": "#00566a",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#3c494e",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#e9f2fd",
+              "surface-container-lowest": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .liquid-bg {
+        background: radial-gradient(circle at 0% 0%, #b6ebff 0%, transparent 50%),
+                    radial-gradient(circle at 100% 100%, #ffd7f5 0%, transparent 50%),
+                    radial-gradient(circle at 50% 50%, #f7f9ff 0%, #e6effa 100%);
+      }
+      .grid-tile {
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+      }
+      .grid-tile:active {
+        transform: scale(0.92);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen overflow-x-hidden selection:bg-primary-fixed">
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary-container/20 blur-[120px]"></div>
+<div class="absolute top-[20%] -right-[10%] w-[35%] h-[35%] rounded-full bg-secondary-fixed/30 blur-[100px]"></div>
+<div class="absolute -bottom-[5%] left-[20%] w-[30%] h-[30%] rounded-full bg-tertiary-fixed/20 blur-[80px]"></div>
+</div>
+<header class="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,210,255,0.08)]">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-7xl mx-auto relative">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">videogame_asset</span>
+<h1 class="text-2xl font-black bg-gradient-to-r from-cyan-600 to-cyan-400 bg-clip-text text-transparent font-['Plus_Jakarta_Sans'] tracking-tight">Rubik's Race</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center gap-8">
+<button class="text-cyan-600 dark:text-cyan-400 font-bold border-b-2 border-cyan-500 py-1 transition-colors">Play</button>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-cyan-50/50 dark:hover:bg-cyan-950/30 px-3 py-1 rounded transition-colors">Target</button>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-cyan-50/50 dark:hover:bg-cyan-950/30 px-3 py-1 rounded transition-colors">Rankings</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors active:scale-95 duration-200">leaderboard</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors active:scale-95 duration-200">settings</span>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5">
+<img alt="User Profile" class="w-full h-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlARfPToXBe_SbUxC-K9B4HBRm3kDMPogWLWl3RWf6mBwtl5ofCe5zWFXKy5oklxvOyLOHigv0r9h0OPOU2nDVM9jZxSKTXkRn3dTWiHUA2R4KX9VxMznUJ-cTrWOAYPqhJgg73CViaoDmKS5OS4TR5Ih4QCUgdMOOXP1bg8qGYrZKpfdd06FP-YwPi9QWa3r2eN6gdhpgcJcrcZ0_juSn5h8xoeuGYvhI2L45WH1QSRhk-UbhKFo0xlLYuMAZjGNgdNbwzC80R7Vf"/>
+</div>
+</div>
+</div>
+</header>
+<main class="relative z-10 pt-28 pb-32 px-4 md:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<aside class="lg:col-span-3 space-y-6 order-2 lg:order-1">
+<div class="glass-card rounded-lg p-6 border border-white/40 shadow-sm relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<p class="font-label text-xs uppercase tracking-[0.2em] text-outline mb-1">Current Streak</p>
+<div class="flex items-baseline gap-2">
+<h2 id="streak-count" class="text-5xl font-black font-headline text-secondary tracking-tighter">12</h2>
+<span class="text-secondary/60 font-bold">WINS</span>
+</div>
+<div class="mt-4 flex gap-1">
+<div class="h-1 flex-1 bg-secondary rounded-full"></div>
+<div class="h-1 flex-1 bg-secondary rounded-full"></div>
+<div class="h-1 flex-1 bg-secondary rounded-full"></div>
+<div class="h-1 flex-1 bg-secondary/20 rounded-full"></div>
+<div class="h-1 flex-1 bg-secondary/20 rounded-full"></div>
+</div>
+</div>
+<div class="glass-card rounded-lg p-6 border border-white/40 shadow-sm">
+<div class="flex justify-between items-center mb-4">
+<p class="font-label text-xs uppercase tracking-[0.2em] text-outline">Opponent</p>
+<span class="text-[10px] font-bold px-2 py-0.5 bg-error/10 text-error rounded-full">LIVE</span>
+</div>
+<div class="flex items-center gap-3 mb-4">
+<img class="w-8 h-8 rounded-full border border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWkFIKEtJTXrWzE0omg8PcGHxGn9rI-NGmP0F2FrEs-PWkEeJb_uIpKFXma13fNSENHrdl7PYcywDFQ-rd-7lS1-J_h5MtlOC_eorWO7FI1hIS7vD0gCmkmv5UljtJLeLwTVaW5yM-5HI96cYnPZ_fKFBFPdObYEG71MvG1I-e9puS2lc-DQVzJDkFWguDIuy8lsr-pNZdPDx0PGtcWu2IeGNb4ojorlKxSD3gg0A2zzoUUSNouDyVSdfXTeEOWxX1k11Hd5cz_5Xe"/>
+<div class="flex-1">
+<div class="flex justify-between text-xs font-bold mb-1">
+<span>Alex_Gamer</span>
+<span id="opponent-progress-text" class="text-primary">82%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div id="opponent-progress-bar" class="bg-primary h-full w-[82%] rounded-full shadow-[0_0_12px_rgba(0,103,127,0.4)] transition-all duration-500"></div>
+</div>
+</div>
+</div>
+<p class="text-[11px] text-outline-variant leading-relaxed italic">"Alex is matching colors rapidly!"</p>
+</div>
+</aside>
+<section class="lg:col-span-6 order-1 lg:order-2 space-y-8">
+<div class="text-center">
+<div class="inline-flex flex-col items-center">
+<div class="flex gap-2 items-baseline">
+<span id="timer-main" class="text-7xl md:text-8xl font-black font-headline tracking-tighter text-on-background drop-shadow-sm">00:00</span>
+<span id="timer-ms" class="text-2xl font-bold text-primary animate-pulse">.00</span>
+</div>
+<div class="font-label text-xs uppercase tracking-[0.4em] text-primary/60 mt-2">Game Time</div>
+</div>
+</div>
+<div class="mx-auto w-full max-w-[500px] aspect-square surface-container-low rounded-lg p-4 md:p-6 shadow-inner relative">
+<div id="game-board" class="glass-card w-full h-full rounded-DEFAULT p-2 md:p-3 border border-white/60 shadow-xl grid grid-cols-5 gap-2 md:gap-3">
+<!-- Grid tiles will be injected here -->
+</div>
+<div class="absolute -bottom-4 -right-4 w-24 h-24 bg-primary-fixed/40 blur-3xl -z-10"></div>
+</div>
+<div class="flex justify-center gap-4">
+<button id="reset-btn" class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-full font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">refresh</span>
+                    RESET TILES
+                </button>
+<button id="surrender-btn" class="px-8 py-4 bg-white/60 backdrop-blur-md border border-white/40 text-on-surface rounded-full font-bold shadow-md hover:bg-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">flag</span>
+                    SURRENDER
+                </button>
+</div>
+</section>
+<aside class="lg:col-span-3 order-3 space-y-6">
+<div class="glass-card rounded-lg p-6 border-2 border-primary-container/30 shadow-2xl relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-white text-[10px] font-label uppercase tracking-widest rounded-full">
+                    Target Goal
+                </div>
+<div id="target-board" class="mt-2 aspect-square w-full max-w-[160px] mx-auto grid grid-cols-3 gap-1.5 p-2 bg-surface-container-highest rounded-DEFAULT">
+<!-- Target tiles will be injected here -->
+</div>
+<p class="text-center font-label text-[10px] text-outline mt-4 uppercase tracking-tighter">Match the inner 3x3 to win</p>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="surface-container-low rounded-lg p-4 group cursor-help transition-colors hover:bg-white/50">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">lightbulb</span>
+<h4 class="font-bold text-sm">Pro Tip</h4>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">Focus on the corners of the 3x3 square first to lock in the frame.</p>
+</div>
+<div class="surface-container-low rounded-lg p-4 flex items-center justify-between">
+<div>
+<h4 class="font-bold text-sm">Game Level</h4>
+<p class="text-xs text-outline">Elite Master</p>
+</div>
+<span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</div>
+</aside>
+</main>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 rounded-t-[2rem] bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl flex justify-around items-center pb-6 pt-2 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.04)]">
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-cyan-600 to-cyan-400 text-white rounded-full w-14 h-14 -mt-6 shadow-lg shadow-cyan-500/40 active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">videogame_asset</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 hover:text-cyan-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">grid_view</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 hover:text-cyan-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">emoji_events</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 hover:text-cyan-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined">person</span>
+</div>
+</nav>
+<script src="script.js"></script>
+</body></html>
